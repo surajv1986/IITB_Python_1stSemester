@@ -1,3 +1,15 @@
+#### Man written begin
+
+- python3 -m venv venv
+- activate env based on your system (Linux based/windows)
+- pip3 install -r requirements.txt
+- python3 espn_gallery_downloader_fixed.py -n 5
+
+
+
+#### Man written end
+
+
 # TO RUN IMPROVED VERSION
 
 - source venv/bin/activate && python3 espn_gallery_downloader_fixed.py -n 5
