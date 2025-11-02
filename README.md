@@ -1,3 +1,9 @@
+# TO RUN IMPROVED VERSION
+
+- source venv/bin/activate && python3 espn_gallery_downloader_improved.py -n 5
+
+
+
 # ESPN Cricinfo Gallery Image Downloader
 
 A Python script that automates downloading images from ESPN Cricinfo gallery albums using Selenium WebDriver.
