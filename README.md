@@ -1,6 +1,6 @@
 # TO RUN IMPROVED VERSION
 
-- source venv/bin/activate && python3 espn_gallery_downloader_improved.py -n 5
+- source venv/bin/activate && python3 espn_gallery_downloader_fixed.py -n 5
 
 
 
