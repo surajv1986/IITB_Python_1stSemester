@@ -202,14 +202,16 @@ python run_pipeline.py
 
 **CSV format:**
 ```csv
-ImageFileName,TrainOrTest,Cell_0_0,Cell_0_1,...,Cell_7_7
-192.jpg,train,0,0,1,0,...,2
+ImageFileName,TrainOrTest,c01,c02,c03,...,c64
+192.jpg,Train,0,0,1,0,...,2
 ```
 
-**File naming convention:**
-- CSV row: `192.jpg` → Annotated image file: `annotated_192.png`
-- Store annotated images in: `data/annotated&csv/annotated_images/`
-- Store CSV in: `data/annotated&csv/cricket_labels.csv`
+**File locations:**
+- **Original images:** `data/raw/` (clean 800×600 images without visual annotations)
+- **CSV labels:** `data/annotated&csv/cricket_labels.csv`
+- **Annotated images:** `data/annotated&csv/annotated_images/` (for reference only, not used in feature extraction)
+
+**Important:** Feature extraction uses the **clean images from `data/raw/`**, not the annotated images. The annotated images are only for visual reference.
 
 ---
 
@@ -217,12 +219,12 @@ ImageFileName,TrainOrTest,Cell_0_0,Cell_0_1,...,Cell_7_7
 
 #### Step 3.1: Extract Features (HOG + HSV + LBP)
 
-Extract per-cell features from annotated images:
+Extract per-cell features from **clean images** in `data/raw/` using labels from CSV:
 
 ```powershell
 python extract_features.py `
   --csv "data/annotated&csv/cricket_labels.csv" `
-  --images "data/annotated&csv/annotated_images" `
+  --images "data/raw" `
   --out-dir "data/features" `
   --output-format both `
   --padding 0 `
@@ -230,7 +232,8 @@ python extract_features.py `
 ```
 
 **What it does:**
-- Maps CSV filenames to annotated images (`192.jpg` → `annotated_192.png`)
+- Reads labels from `cricket_labels.csv` (e.g., `192.jpg`)
+- Loads corresponding **clean images from `data/raw/`** (not annotated images)
 - Validates image dimensions (must be 800×600)
 - Divides each image into 8×8 grid (64 cells)
 - Extracts per-cell features:
@@ -249,7 +252,7 @@ python extract_features.py `
 
 **Parameters:**
 - `--csv`: Path to labels CSV
-- `--images`: Folder with annotated images
+- `--images`: Folder with clean images (use `data/raw`, not annotated images)
 - `--out-dir`: Output directory (default: `data/features`)
 - `--output-format`: `csv`, `npz`, or `both`
 - `--padding`: Pixel padding around each cell (default: 0, recommended)
@@ -520,7 +523,7 @@ python img_downloader_self.py
 python process_images.py
 
 # 3. Extract features (after manual annotation)
-python extract_features.py --csv "data/annotated&csv/cricket_labels.csv" --images "data/annotated&csv/annotated_images" --out-dir "data/features" --output-format both --padding 0
+python extract_features.py --csv "data/annotated&csv/cricket_labels.csv" --images "data/raw" --out-dir "data/features" --output-format both --padding 0
 
 # 4. Apply PCA + split train/test
 python reduce_features.py --input data/features/features.npz --output-dir data/features --variance 0.95 --test-size 0.3 --random-seed 42

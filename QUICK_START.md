@@ -25,9 +25,10 @@ python img_downloader_self.py
 python process_images.py
 
 # 3. Extract features (after annotation)
+# Uses clean images from data/raw, NOT annotated images
 python extract_features.py `
   --csv "data/annotated&csv/cricket_labels.csv" `
-  --images "data/annotated&csv/annotated_images" `
+  --images "data/raw" `
   --out-dir "data/features" `
   --output-format both `
   --padding 0
