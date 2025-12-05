@@ -188,16 +188,11 @@ def main():
     # Process rows
     for _, row in tqdm(df.iterrows(), total=len(df), desc='Images'):
         img_name = str(row[col0])
-        annotated_name = filename_to_annotated(img_name)
-        img_path = os.path.join(args.images, annotated_name)
+        # Use original clean images from data/raw/ (not annotated images)
+        img_path = os.path.join(args.images, img_name)
         if not os.path.exists(img_path):
-            # Try the raw filename as fallback
-            alt_path = os.path.join(args.images, img_name)
-            if os.path.exists(alt_path):
-                img_path = alt_path
-            else:
-                print(f"[INFO] Annotated image not found for {img_name} -> tried {annotated_name} and {img_name}")
-                continue
+            print(f"[INFO] Image not found: {img_path}")
+            continue
 
         # Load image (should be 800x600)
         pil = Image.open(img_path).convert('RGB')
@@ -240,11 +235,11 @@ def main():
 
                 if args.save_intermediates:
                     # Save grayscale
-                    g_p = os.path.join(gray_dir, f"{os.path.splitext(annotated_name)[0]}_cell{idx}.png")
+                    g_p = os.path.join(gray_dir, f"{os.path.splitext(img_name)[0]}_cell{idx}.png")
                     Image.fromarray(gray_map).save(g_p)
                     # Save LBP map scaled to 0-255 for viewing
                     lbp_scaled = (255 * (lbp_map - lbp_map.min()) / max(1, (lbp_map.max() - lbp_map.min()))).astype(np.uint8)
-                    lbp_p = os.path.join(lbp_dir, f"{os.path.splitext(annotated_name)[0]}_cell{idx}_lbp.png")
+                    lbp_p = os.path.join(lbp_dir, f"{os.path.splitext(img_name)[0]}_cell{idx}_lbp.png")
                     Image.fromarray(lbp_scaled).save(lbp_p)
 
     if len(X_list) == 0:
